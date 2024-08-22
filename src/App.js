@@ -7,6 +7,7 @@ import Booking from "./components/booking";
 import BookingConfirm from "./components/bookingConfirm";
 import PaymentMethod from "./components/paymentMethod";
 import MyTicket from "./components/myTicket";
+import Login from "./components/login";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/my-ticket" element={<MyTicket />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/info-user" element={<InfoUser />} />
           <Route path="/booking/:slug" element={<Booking />} />
           <Route path="/booking-confirm" element={<BookingConfirm />} />

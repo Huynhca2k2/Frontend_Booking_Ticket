@@ -28,7 +28,7 @@ function CustomSearchInput() {
   };
 
   return (
-    <div className="flex flex-row gap-6 justify-between">
+    <div className="flex flex-row gap-4 justify-between">
       <div className="flex flex-row flex-1 h-[54px] border border-gray-300 rounded-lg justify-around">
         <div className="flex flex-row items-center">
           <img

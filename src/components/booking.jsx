@@ -65,7 +65,7 @@ function Booking() {
       <div className="flex flex-row !mt-4 gap-4 custom-container">
         <div className="flex flex-col gap-4 w-1/4 ">
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-            <Title level={4} className="!text-black">
+            <Title level={4} className="!text-black !font-bold">
               Sắp xếp
             </Title>
             <Radio.Group onChange={onChange} value={value}>

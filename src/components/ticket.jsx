@@ -6,6 +6,8 @@ import { Alert, Tabs, Typography } from "antd";
 import { AiOutlineEnvironment } from "react-icons/ai";
 import { message, Steps, theme } from "antd";
 import SelectChair from "./selectChair";
+import SelectLocation from "./selectLocation";
+import { Link } from "react-router-dom";
 const steps = [
   {
     title: "Chỗ mong muốn",
@@ -13,7 +15,7 @@ const steps = [
   },
   {
     title: "Điểm đón trả",
-    content: "Second-content",
+    content: <SelectLocation />,
   },
 ];
 
@@ -45,7 +47,7 @@ function Ticket() {
   }));
 
   return (
-    <div className="flex flex-row gap-4 p-4 bg-white rounded-lg">
+    <div className="flex flex-row gap-4 p-4 bg-white rounded-lg hover:shadow-lg">
       <div className="w-1/4 h-full bg-gray-900">
         <Badge.Ribbon
           text="Xác nhận tức thì"
@@ -160,13 +162,9 @@ function Ticket() {
                   </div>
                 )}
                 {current === steps.length - 1 && (
-                  <Button
-                    type="primary"
-                    onClick={() => message.success("Processing complete!")}
-                    style={{ marginLeft: "auto" }}
-                  >
-                    Tiếp tục
-                  </Button>
+                  <Link to="/booking-confirm" className="block ml-auto">
+                    <Button type="primary">Tiếp tục</Button>
+                  </Link>
                 )}
               </div>
             </Modal>

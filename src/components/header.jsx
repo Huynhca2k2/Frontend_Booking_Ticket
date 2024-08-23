@@ -5,6 +5,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Dropdown, Space } from "antd";
 import imgLogo from "../assets/images/logoBooking.png";
+import { Link } from "react-router-dom";
 
 const items = [
   {
@@ -20,13 +21,13 @@ const items = [
 function Header() {
   return (
     <div className="px-5 py-5 flex flex-row items-center justify-between bg-[#2474e5] border-b border-sky-400">
-      <div className="w-[148px] h-[40px]">
+      <Link to="/" className="w-[148px] h-[40px] block">
         <img
           src={imgLogo}
           alt="pic logo"
           className="w-full h-full object-cover"
         />
-      </div>
+      </Link>
       <div className="flex flex-row items-center">
         <Button type="link" className="font-semibold text-white">
           Đơn hàng của tôi

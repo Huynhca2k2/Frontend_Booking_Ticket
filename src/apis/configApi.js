@@ -62,5 +62,37 @@ export const getBusPopulor = () => {
       price: "Từ 900.000đ",
     },
   ];
+  const listChair = [
+    {
+      id: 0,
+      codeChar: "A1",
+      status: "available",
+    },
+    {
+      id: 0,
+      codeChar: "A1",
+      status: "available",
+    },
+    {
+      id: 0,
+      codeChar: "A1",
+      status: "available",
+    },
+    {
+      id: 0,
+      codeChar: "A1",
+      status: "available",
+    },
+    {
+      id: 0,
+      codeChar: "A1",
+      status: "unavailable",
+    },
+    {
+      id: 0,
+      codeChar: "A1",
+      status: "selected",
+    },
+  ];
   return response;
 };

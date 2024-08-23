@@ -11,3 +11,34 @@ body {
   max-width: 980px;
   margin: auto;
 }
+.ant-timeline-item-last {
+  padding-bottom: 0px !important;
+}
+
+.flash-sale::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  top: 6px;
+  right: -3px;
+  border-bottom: 1px solid #27ae60;
+  border-left: 1px solid #27ae60;
+  transform: rotate(45deg);
+}
+
+.flash-sale::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  top: 6px;
+  left: -3px;
+  border-top: 1px solid #27ae60;
+  border-right: 1px solid #27ae60;
+  transform: rotate(45deg);
+}

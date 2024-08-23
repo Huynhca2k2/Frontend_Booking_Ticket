@@ -1,7 +1,5 @@
 import leaderBoard from "../assets/images/leaderboard1.png";
 import { Alert, Tabs, Typography } from "antd";
-import { FaBus, FaPlane } from "react-icons/fa";
-import CustomSearchInput from "./customSearchInput";
 import icon1 from "../assets/images/icon1.png";
 import icon2 from "../assets/images/icon2.png";
 import icon3 from "../assets/images/icon3.png";
@@ -25,6 +23,7 @@ import logo6 from "../assets/images/logo-vtv.png";
 import Slider from "react-slick";
 import { getBusPopulor } from "./../apis/configApi";
 import { Link } from "react-router-dom";
+import BookingBox from "./bookingBox";
 
 const { Title, Text } = Typography;
 
@@ -50,40 +49,7 @@ function Home() {
             Vexere - Cam kết hoàn 150% nếu nhà xe không cung cấp dịch vụ vận
             chuyển (<span className="text-yellow-500 font-bold">*</span>)
           </Title>
-          <div className="bg-white w-full px-4 pb-4 rounded-2xl ">
-            <Tabs
-              defaultActiveKey="1"
-              centered
-              items={[
-                {
-                  label: (
-                    <span className="flex items-center gap-2 px-6 text-base font-semibold">
-                      <FaBus />
-                      Xe Khách
-                    </span>
-                  ),
-                  key: "1",
-                  children: <CustomSearchInput />,
-                },
-                {
-                  label: (
-                    <span className="flex items-center gap-2 px-6 text-base font-semibold">
-                      <FaPlane />
-                      Máy Bay
-                    </span>
-                  ),
-                  key: "2",
-                  children: (
-                    <Alert
-                      message="The function will be developed in the future."
-                      type="warning"
-                      showIcon
-                    />
-                  ),
-                },
-              ]}
-            />
-          </div>
+          <BookingBox />
         </div>
         <div className="absolute left-0 right-0 bottom-0 h-[64px] bg-[#00000080] flex flex-row gap-16 justify-center">
           <div className="flex flex-row gap-2 items-center">
@@ -114,9 +80,7 @@ function Home() {
       </div>
       <div className="custom-container">
         <div className="mt-10">
-          <Title level={3} className="pl-2">
-            Tuyến đường phổ biến
-          </Title>
+          <Title level={3}>Tuyến đường phổ biến</Title>
           <div className="slider-container mt-4">
             <Slider {...settings}>
               {getBusPopulor().map((item, index) => (
@@ -144,9 +108,7 @@ function Home() {
         </div>
 
         <div className="mt-10">
-          <Title level={3} className="pl-2">
-            Ưu đãi nổi bật
-          </Title>
+          <Title level={3}>Ưu đãi nổi bật</Title>
           <div className="flex flex-row gap-4">
             <div className="border-[1px] border-solid border-gray-200 shadow-lg rounded-md w-1/3">
               <img
@@ -184,9 +146,7 @@ function Home() {
         </div>
 
         <div className="mt-10">
-          <Title level={3} className="pl-2">
-            Nền tảng kết nối người dùng và nhà xe
-          </Title>
+          <Title level={3}>Nền tảng kết nối người dùng và nhà xe</Title>
           <div className="flex flex-row gap-2">
             <div className="border-[1px] border-solid border-gray-200 rounded-md w-1/4 p-3 flex flex-row gap-2">
               <img
@@ -266,9 +226,7 @@ function Home() {
         </div>
 
         <div className="mt-10">
-          <Title level={3} className="pl-2">
-            Địa điểm du lịch nổi bật
-          </Title>
+          <Title level={3}>Địa điểm du lịch nổi bật</Title>
           <div className="flex flex-row gap-4">
             <div className="border-[1px] border-solid border-gray-200 shadow-lg rounded-md w-1/3">
               <img
@@ -304,9 +262,7 @@ function Home() {
         </div>
 
         <div className="my-10">
-          <Title level={3} className="pl-2">
-            Vexere đã được nhắc đến trên
-          </Title>
+          <Title level={3}>Vexere đã được nhắc đến trên</Title>
           <div className="flex flex-row items-center justify-between h-[44px]">
             <img
               src={logo1}

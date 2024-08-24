@@ -42,3 +42,16 @@ body {
   border-right: 1px solid #27ae60;
   transform: rotate(45deg);
 }
+
+.ant-form-item-label {
+  text-align: start !important;
+}
+
+.ant-timeline-item-label {
+  min-width: auto;
+  text-align: left;
+}
+
+.ant-timeline-item-left .ant-timeline-item-label {
+  padding-right: 8px;
+}

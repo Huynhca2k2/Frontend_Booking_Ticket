@@ -2,6 +2,9 @@ import hero1 from "../assets/images/hero1.png";
 import hero2 from "../assets/images/hero2.png";
 import hero3 from "../assets/images/hero3.png";
 import hero4 from "../assets/images/hero4.png";
+import { Alert, Tabs, Typography } from "antd";
+
+const { Title, Text } = Typography;
 
 export const getBusPopulor = () => {
   const response = [
@@ -170,6 +173,45 @@ export const listChair = [
   { id: 35, codeChair: "A36", status: "unavailable" },
 ];
 
+const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world.
+`;
+
+export const items = [
+  {
+    key: "1",
+    label: <Title level={5}>Giờ đi</Title>,
+    children: <p>{text}</p>,
+  },
+  {
+    key: "2",
+    label: <Title level={5}>Nhà xe</Title>,
+    children: <p>{text}</p>,
+  },
+  {
+    key: "3",
+    label: <Title level={5}>Giá vé</Title>,
+    children: <p>{text}</p>,
+  },
+  {
+    key: "4",
+    label: <Title level={5}>Điểm đón</Title>,
+    children: <p>{text}</p>,
+  },
+  {
+    key: "5",
+    label: <Title level={5}>Điểm trả</Title>,
+    children: <p>{text}</p>,
+  },
+  {
+    key: "6",
+    label: <Title level={5}>Vị trí ghế</Title>,
+    children: <p>{text}</p>,
+  },
+];
+
 export const bookings = [
   {
     id: 0,
@@ -193,54 +235,73 @@ export const bookings = [
     },
     placeStart: [
       {
+        index: 0,
         name: "116 Quốc lộ 13",
         location: "266 Đồng Đen, Phường 10, Tân Bình, Hồ Chí Minh",
       },
       {
+        index: 1,
         name: "Lăng Cha Cả",
-        location:
-          "315 Hoàng văn Thụ, Phường 2, Quận Tân Bình, Phường 2, Tân Bình, Hồ Chí Minh",
+        location: "315 Hoàng văn Thụ, Phường 2, Quận Tân Bình, Hồ Chí Minh",
+      },
+      {
+        index: 2,
+        name: "5 Nguyễn Huệ",
+        location: "Quận 1, Hồ Chí Minh",
+      },
+      {
+        index: 3,
+        name: "Chợ Bến Thành",
+        location: "Quận 1, Hồ Chí Minh",
       },
     ],
     placeEnd: [
       {
+        index: 0,
         name: "Vp Đà Lạt",
         location:
           "Quốc Lộ 20, thị trấn Madagui, Thị trấn Ma Đa Guôi, Đạ Huoai, Lâm Đồng",
       },
       {
+        index: 1,
         name: "Siêu thị Coop Mart Bảo Lộc",
         location: "803 Trần Phú, Phường 2, Bảo Lộc, Lâm Đồng",
       },
     ],
-    ticket: {
-      user: {
-        name: "",
-        email: "",
-        numberPhone: "",
+    ticket: [
+      {
+        id: 0,
+        user: {
+          name: "",
+          email: "",
+          numberPhone: "",
+        },
+        chairs: ["A1", "A2"],
+        time: {
+          hourStart: "13:00",
+          dateStart: "2024-08-27",
+          hourEnd: "19:45",
+          dateEnd: "2024-08-27",
+        },
+        placeStart: {
+          index: 0,
+          name: "116 Quốc lộ 13",
+          location: "266 Đồng Đen, Phường 10, Tân Bình, Hồ Chí Minh",
+        },
+        placeEnd: {
+          index: 1,
+          name: "Vp Đà Lạt",
+          location:
+            "Quốc Lộ 20, thị trấn Madagui, Thị trấn Ma Đa Guôi, Đạ Huoai, Lâm Đồng",
+        },
       },
-      chairs: ["A1", "A2"],
-      time: {
-        hourStart: "13:00",
-        dateStart: "2024-08-27",
-        hourEnd: "19:45",
-        dateEnd: "2024-08-27",
-      },
-      placeStart: {
-        name: "116 Quốc lộ 13",
-        location: "266 Đồng Đen, Phường 10, Tân Bình, Hồ Chí Minh",
-      },
-      placeEnd: {
-        name: "Vp Đà Lạt",
-        location:
-          "Quốc Lộ 20, thị trấn Madagui, Thị trấn Ma Đa Guôi, Đạ Huoai, Lâm Đồng",
-      },
-    },
+    ],
+    status: true,
   },
   {
     id: 1,
-    from: "ha-noi",
-    to: "hai-phong",
+    from: "ca-mau",
+    to: "ho-chi-minh",
     garage: {
       name: "Lê Lai Limousine",
       img: "https://static.vexere.com/production/images/1696085715372.jpeg?w=250&h=250",
@@ -253,53 +314,63 @@ export const bookings = [
     chairs: listChair,
     time: {
       hourStart: "09:00",
-      dateStart: "2024-08-28",
+      dateStart: "2024-08-27",
       hourEnd: "16:30",
       dateEnd: "2024-08-28",
     },
     placeStart: [
       {
+        index: 0,
         name: "5 Nguyễn Huệ",
         location: "Quận 1, Hồ Chí Minh",
       },
       {
+        index: 1,
         name: "Chợ Bến Thành",
         location: "Quận 1, Hồ Chí Minh",
       },
     ],
     placeEnd: [
       {
+        index: 0,
         name: "Bãi Biển Nha Trang",
         location: "Nha Trang, Khánh Hòa",
       },
       {
+        index: 1,
         name: "Siêu thị Big C Nha Trang",
         location: "Trần Phú, Nha Trang, Khánh Hòa",
       },
     ],
 
-    ticket: {
-      user: {
-        name: "Nguyễn Văn A",
-        email: "nguyenvana@example.com",
-        numberPhone: "0987654321",
+    ticket: [
+      {
+        id: 1,
+        user: {
+          name: "Nguyễn Văn A",
+          email: "nguyenvana@example.com",
+          numberPhone: "0987654321",
+        },
+        chairs: ["A1", "A2"],
+        time: {
+          hourStart: "09:00",
+          dateStart: "2024-08-28",
+          hourEnd: "16:30",
+          dateEnd: "2024-08-28",
+        },
+        placeStart: {
+          index: 0,
+          name: "5 Nguyễn Huệ",
+          location: "Quận 1, Hồ Chí Minh",
+        },
+        placeEnd: {
+          index: 1,
+          name: "Bãi Biển Nha Trang",
+          location: "Nha Trang, Khánh Hòa",
+        },
       },
-      chairs: ["A1", "A2"],
-      time: {
-        hourStart: "09:00",
-        dateStart: "2024-08-28",
-        hourEnd: "16:30",
-        dateEnd: "2024-08-28",
-      },
-      placeStart: {
-        name: "5 Nguyễn Huệ",
-        location: "Quận 1, Hồ Chí Minh",
-      },
-      placeEnd: {
-        name: "Bãi Biển Nha Trang",
-        location: "Nha Trang, Khánh Hòa",
-      },
-    },
+    ],
+    status: true,
   },
   {
     id: 2,
@@ -323,46 +394,56 @@ export const bookings = [
     },
     placeStart: [
       {
+        index: 0,
         name: "32 Trần Hưng Đạo",
         location: "Quận 5, Hồ Chí Minh",
       },
       {
+        index: 1,
         name: "Nhà thờ Đức Bà",
         location: "Quận 1, Hồ Chí Minh",
       },
     ],
     placeEnd: [
       {
+        index: 0,
         name: "Bãi Biển Phan Thiết",
         location: "Phan Thiết, Bình Thuận",
       },
       {
+        index: 1,
         name: "Siêu thị Lotte Mart Phan Thiết",
         location: "Phan Thiết, Bình Thuận",
       },
     ],
-    ticket: {
-      user: {
-        name: "Trần Thị B",
-        email: "tranthib@example.com",
-        numberPhone: "0912345678",
+    ticket: [
+      {
+        id: 2,
+        user: {
+          name: "Trần Thị B",
+          email: "tranthib@example.com",
+          numberPhone: "0912345678",
+        },
+        time: {
+          hourStart: "14:00",
+          dateStart: "2024-08-29",
+          hourEnd: "20:00",
+          dateEnd: "2024-08-29",
+        },
+        placeStart: {
+          index: 0,
+          name: "32 Trần Hưng Đạo",
+          location: "Quận 5, Hồ Chí Minh",
+        },
+        placeEnd: {
+          index: 1,
+          name: "Bãi Biển Phan Thiết",
+          location: "Phan Thiết, Bình Thuận",
+        },
+        chairs: ["C1", "C2"],
       },
-      time: {
-        hourStart: "14:00",
-        dateStart: "2024-08-29",
-        hourEnd: "20:00",
-        dateEnd: "2024-08-29",
-      },
-      placeStart: {
-        name: "32 Trần Hưng Đạo",
-        location: "Quận 5, Hồ Chí Minh",
-      },
-      placeEnd: {
-        name: "Bãi Biển Phan Thiết",
-        location: "Phan Thiết, Bình Thuận",
-      },
-      chairs: ["C1", "C2"],
-    },
+    ],
+    status: true,
   },
   {
     id: 3,
@@ -386,33 +467,41 @@ export const bookings = [
     },
     placeStart: [
       {
+        index: 0,
         name: "8 Phạm Ngũ Lão",
         location: "Quận 1, Hồ Chí Minh",
       },
       {
+        index: 1,
         name: "Bưu Điện Trung Tâm",
         location: "Quận 1, Hồ Chí Minh",
       },
     ],
     placeEnd: [
       {
+        index: 0,
         name: "Công viên 23/9",
         location: "Quận 1, Hồ Chí Minh",
       },
       {
+        index: 1,
         name: "Siêu thị Coop Mart Nguyễn Đình Chiểu",
         location: "Quận 3, Hồ Chí Minh",
       },
     ],
-    ticket: {
-      user: {
-        name: "Nguyễn Thị C",
-        email: "nguyenthic@example.com",
-        numberPhone: "0923456789",
-      },
+    ticket: [
+      {
+        id: 3,
+        user: {
+          name: "Nguyễn Thị C",
+          email: "nguyenthic@example.com",
+          numberPhone: "0923456789",
+        },
 
-      chairs: ["D1", "D2"],
-    },
+        chairs: ["D1", "D2"],
+      },
+    ],
+    status: true,
   },
   {
     id: 4,
@@ -454,28 +543,32 @@ export const bookings = [
         location: "Đà Lạt, Lâm Đồng",
       },
     ],
-    ticket: {
-      user: {
-        name: "Lê Văn D",
-        email: "levand@example.com",
-        numberPhone: "0934567890",
+    ticket: [
+      {
+        id: 4,
+        user: {
+          name: "Lê Văn D",
+          email: "levand@example.com",
+          numberPhone: "0934567890",
+        },
+        time: {
+          hourStart: "11:00",
+          dateStart: "2024-08-31",
+          hourEnd: "18:30",
+          dateEnd: "2024-08-31",
+        },
+        placeStart: {
+          name: "45 Lê Duẩn",
+          location: "Quận 1, Hồ Chí Minh",
+        },
+        placeEnd: {
+          name: "Đà Lạt",
+          location: "Lâm Đồng",
+        },
+        chairs: ["E1", "E2"],
       },
-      time: {
-        hourStart: "11:00",
-        dateStart: "2024-08-31",
-        hourEnd: "18:30",
-        dateEnd: "2024-08-31",
-      },
-      placeStart: {
-        name: "45 Lê Duẩn",
-        location: "Quận 1, Hồ Chí Minh",
-      },
-      placeEnd: {
-        name: "Đà Lạt",
-        location: "Lâm Đồng",
-      },
-      chairs: ["E1", "E2"],
-    },
+    ],
+    status: true,
   },
   {
     id: 5,
@@ -517,28 +610,31 @@ export const bookings = [
         location: "Vũng Tàu",
       },
     ],
-    ticket: {
-      id: 0,
-      user: {
-        name: "Đinh Thị E",
-        email: "dinthie@example.com",
-        numberPhone: "0945678901",
+    ticket: [
+      {
+        id: 5,
+        user: {
+          name: "Đinh Thị E",
+          email: "dinthie@example.com",
+          numberPhone: "0945678901",
+        },
+        time: {
+          hourStart: "15:00",
+          dateStart: "2024-09-01",
+          hourEnd: "21:00",
+          dateEnd: "2024-09-01",
+        },
+        placeStart: {
+          name: "20 Nguyễn Thị Minh Khai",
+          location: "Quận 3, Hồ Chí Minh",
+        },
+        placeEnd: {
+          name: "Vũng Tàu",
+          location: "Vũng Tàu",
+        },
+        chairs: ["F1", "F2"],
       },
-      time: {
-        hourStart: "15:00",
-        dateStart: "2024-09-01",
-        hourEnd: "21:00",
-        dateEnd: "2024-09-01",
-      },
-      placeStart: {
-        name: "20 Nguyễn Thị Minh Khai",
-        location: "Quận 3, Hồ Chí Minh",
-      },
-      placeEnd: {
-        name: "Vũng Tàu",
-        location: "Vũng Tàu",
-      },
-      chairs: ["F1", "F2"],
-    },
+    ],
+    status: true,
   },
 ];

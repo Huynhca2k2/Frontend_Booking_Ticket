@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StarOutlined } from "@ant-design/icons";
-import imgBus from "../assets/images/imgbus.jpeg";
+
 import { Badge, Button, Divider, Modal, Timeline } from "antd";
 import { Alert, Tabs, Typography } from "antd";
 import { AiOutlineEnvironment } from "react-icons/ai";
@@ -31,7 +31,7 @@ function Ticket({ bookingItem }) {
   const handleAddTime = () => {
     setTicket((prevTicket) => ({
       ...prevTicket,
-      chair: selectedChairs,
+      chairs: selectedChairs,
       id: bookingItem?.id,
       time: bookingItem?.time,
     }));
@@ -67,23 +67,18 @@ function Ticket({ bookingItem }) {
     setIsModalOpen(false);
   };
 
-  const { token } = theme.useToken();
   const next = () => {
     if (selectedChairs.length === 0) {
       message.warning("Vui lòng chọn ít nhất một chổ ngồi");
       return;
     }
-    console.log(selectedChairs);
+
     setCurrent(current + 1);
   };
   const prev = () => {
     setSelectedChairs([]);
     setCurrent(current - 1);
   };
-  const items = steps.map((item) => ({
-    key: item.title,
-    title: item.title,
-  }));
 
   const duration = calculateDuration(
     bookingItem.time.hourStart,

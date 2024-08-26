@@ -1,14 +1,31 @@
 import { Alert, Divider, Input, Radio, Space, Tabs, Typography } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineEnvironment } from "react-icons/ai";
 import { useTicket } from "../context/TicketContext";
 
 const { Title, Text } = Typography;
 
-function SelectLocation({ time, placeStart = [], placeEnd = [] }) {
-  const [valueStart, setValueStart] = useState(1);
-  const [valueEnd, setValueEnd] = useState(1);
+function SelectLocation({
+  time,
+  placeStart = [],
+  placeEnd = [],
+  valueStartItem = 0,
+  valueEndItem = 0,
+}) {
+  const [valueStart, setValueStart] = useState(0);
+  const [valueEnd, setValueEnd] = useState(0);
   const { ticket, setTicket } = useTicket();
+
+  useEffect(() => {
+    console.log("gia tri nhan vao", valueEndItem, valueEndItem);
+    setValueStart(valueStartItem);
+    setValueEnd(valueEndItem);
+    setTicket((prevTicket) => ({
+      ...prevTicket,
+      placeStart: placeStart[valueStartItem],
+      placeEnd: placeEnd[valueEndItem],
+    }));
+  }, [valueStartItem, valueEndItem]);
 
   const onChangeStart = (e) => {
     console.log("radio checked", placeStart[e.target.value]);

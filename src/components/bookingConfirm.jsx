@@ -5,6 +5,7 @@ import {
   Checkbox,
   Divider,
   Drawer,
+  Modal,
   Radio,
   Timeline,
 } from "antd";
@@ -16,6 +17,8 @@ import { AiOutlineEnvironment } from "react-icons/ai";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTicket } from "../context/TicketContext";
+import { bookings } from "../apis/configApi";
+import SelectLocation from "./selectLocation";
 
 const { Option } = Select;
 
@@ -44,9 +47,15 @@ const onChange = (e) => {
 };
 
 function BookingConfirm() {
+  const [modal2Open, setModal2Open] = useState(false);
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
-  const { ticket } = useTicket();
+  const { ticket, setTicket } = useTicket();
+  const myTicket = bookings.find((booking) => booking.id === ticket.id);
+
+  //xem value cua form submit
+  console.log(ticket);
+
   const showDrawer = () => {
     setOpen(true);
   };
@@ -67,7 +76,18 @@ function BookingConfirm() {
     </Form.Item>
   );
 
-  console.log("Dữ liệu ticket:", ticket);
+  const handleSubmit = () => {
+    const formValues = form.getFieldsValue();
+    setTicket((prevTicket) => ({
+      ...prevTicket,
+      user: {
+        name: formValues.username,
+        email: formValues.email,
+        numberPhone: formValues.phone,
+      },
+    }));
+  };
+
   return (
     <div className="bg-[#f2f2f2]">
       <div className="custom-container pt-4">
@@ -90,7 +110,6 @@ function BookingConfirm() {
                 form={form}
                 name="register"
                 initialValues={{
-                  residence: ["zhejiang", "hangzhou", "xihu"],
                   prefix: "84",
                 }}
                 style={{
@@ -116,7 +135,7 @@ function BookingConfirm() {
                 </Form.Item>
 
                 <Form.Item
-                  name="Tên người đi"
+                  name="username"
                   label="Tên người đi"
                   rules={[
                     {
@@ -201,7 +220,8 @@ function BookingConfirm() {
             </div>
             <Button
               type="primary"
-              className="h-full font-medium text-lg text-[#141414] bg-[#ffd333]  hover:!bg-yellow-400 hover:!border-[#ffd333] hover:!text-gray-600"
+              onClick={handleSubmit}
+              className="h-full p-2 font-medium text-base text-[#141414] bg-[#ffd333]  hover:!bg-yellow-400 hover:!border-[#ffd333] hover:!text-gray-600"
             >
               Xác nhận đặt vé
             </Button>
@@ -213,17 +233,17 @@ function BookingConfirm() {
                   Tạm tính
                 </Title>
                 <Title level={4} className="!font-bold !my-0 !text-lg">
-                  360.000đ
+                  {myTicket.ticketPrice * ticket?.chairs?.length} đ
                 </Title>
               </div>
               <div className="flex flex-row justify-between items-start mt-3">
                 <Text className="!text-base">Giá vé</Text>
                 <div className="flex flex-col items-end">
                   <Text className="!font-semibold !text-base">
-                    180.000đ x 2
+                    {myTicket.ticketPrice} x {ticket?.chairs?.length}
                   </Text>
                   <Text className="!text-sm" type="secondary">
-                    Mã ghế/giường: B51, B52
+                    Mã ghế/giường: {ticket.chairs.join(", ")}
                   </Text>
                 </div>
               </div>
@@ -232,7 +252,7 @@ function BookingConfirm() {
               <Title level={4} className="!font-bold !my-0 !text-lg">
                 Thông tin chuyến đi
               </Title>
-              <div className="p-4 rounded-xl  border border-gray-200">
+              <div className="p-4 mt-2 rounded-xl  border border-gray-200">
                 <Button
                   onClick={showDrawer}
                   type="link"
@@ -259,7 +279,7 @@ function BookingConfirm() {
                         Tuyến
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        Sài Gòn - Đà Lạt
+                        {myTicket.from} - {myTicket.to}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -267,7 +287,7 @@ function BookingConfirm() {
                         Nhà xe
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        An Anh Limousine
+                        {myTicket.garage.name}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -275,7 +295,7 @@ function BookingConfirm() {
                         Chuyến
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        23:45 • CN, 25/08/2024
+                        {ticket.time.hourStart} • {ticket.time.dateStart}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -283,26 +303,32 @@ function BookingConfirm() {
                         Loại xe
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        Limousine 24 Phòng Đôi
+                        {myTicket.vehicleType}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
                       <Text className="!text-sm" type="secondary">
                         Số lượng
                       </Text>
-                      <Text className="!font-semibold !text-sm">1 vé</Text>
+                      <Text className="!font-semibold !text-sm">
+                        {ticket.chairs.length} vé
+                      </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
                       <Text className="!text-sm" type="secondary">
                         Mã ghế/ giường
                       </Text>
-                      <Text className="!font-semibold !text-sm">11</Text>
+                      <Text className="!font-semibold !text-sm">
+                        {ticket.chairs.join(", ")}
+                      </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
                       <Text className="!text-sm" type="secondary">
                         Tạm tính
                       </Text>
-                      <Text className="!font-semibold !text-sm">450.000đ</Text>
+                      <Text className="!font-semibold !text-sm">
+                        {myTicket.ticketPrice * ticket?.chairs?.length} đ
+                      </Text>
                     </div>
                     <div>
                       <div className="flex flex-row items-center justify-between">
@@ -311,7 +337,11 @@ function BookingConfirm() {
                           <Text className="!font-bold !text-sm">Điểm đón</Text>
                         </div>
                         <div>
-                          <Button type="link" className="px-0">
+                          <Button
+                            type="link"
+                            className="px-0"
+                            onClick={() => setModal2Open(true)}
+                          >
                             <Text className="!text-sm !font-bold text-[#2474e5] underline">
                               Thay đổi
                             </Text>
@@ -319,12 +349,15 @@ function BookingConfirm() {
                         </div>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <Text className=" !text-sm">95 Nguyễn Duy Dương</Text>
+                        <Text className=" !text-sm">
+                          {ticket.placeStart.name}
+                        </Text>
                         <Text className="!text-xs" type="secondary">
-                          95 Nguyễn Duy Dương, Phường 09, Quận 5, Hồ Chí Minh
+                          {ticket.placeStart.location}
                         </Text>
                         <Text className="!font-semibold !text-sm">
-                          Dự kiến đón lúc: 23:30 25/08/2024
+                          Dự kiến đón lúc: {ticket.time.hourStart} •
+                          {ticket.time.dateStart}
                         </Text>
                       </div>
                     </div>
@@ -343,13 +376,15 @@ function BookingConfirm() {
                         </div>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <Text className=" !text-sm">Vp Đà Lạt</Text>
+                        <Text className=" !text-sm">
+                          {ticket.placeEnd.name}
+                        </Text>
                         <Text className="!text-xs" type="secondary">
-                          Đầu đường KQH Phạm Hồng Thái, Phường 10, Tp.Đà Lạt,
-                          Lâm Đồng, Phường 10, Đà Lạt, Lâm Đồng
+                          {ticket.placeEnd.location}
                         </Text>
                         <Text className="!font-semibold !text-sm">
-                          Dự kiến trả lúc: 06:30 26/08/2024
+                          Dự kiến trả lúc: {ticket.time.hourEnd} •
+                          {ticket.time.dateEnd}
                         </Text>
                       </div>
                     </div>
@@ -360,14 +395,18 @@ function BookingConfirm() {
                   mode="left"
                   items={[
                     {
-                      label: <Text className="!font-bold !text-xl">23:20</Text>,
+                      label: (
+                        <Text className="!font-bold !text-xl">
+                          {ticket.time.hourStart}
+                        </Text>
+                      ),
                       children: (
                         <div className="flex flex-col">
                           <Text className="!font-semibold !text-sm">
-                            95 Nguyễn Duy Dương
+                            {ticket.placeStart.name}
                           </Text>
                           <Text className="!text-xs" type="secondary">
-                            95 Nguyễn Duy Dương, Phường 09, Quận 5, Hồ Chí Minh
+                            {ticket.placeStart.location}
                           </Text>
                         </div>
                       ),
@@ -375,9 +414,7 @@ function BookingConfirm() {
                     {
                       label: (
                         <Text className="!font-bold !text-xl">
-                          06:30
-                          <br />
-                          (26/08)
+                          {ticket.time.hourEnd}
                         </Text>
                       ),
                       dot: <AiOutlineEnvironment className="text-[#eb5757]" />,
@@ -385,17 +422,31 @@ function BookingConfirm() {
                       children: (
                         <div className="flex flex-col">
                           <Text className="!font-semibold !text-sm">
-                            Vp Đà Lạt
+                            {ticket.placeEnd.name}
                           </Text>
                           <Text className="!text-xs" type="secondary">
-                            Đầu đường KQH Phạm Hồng Thái, Phường 10, Tp.Đà Lạt,
-                            Lâm Đồng, Phường 10, Đà Lạt, Lâm Đồng
+                            {ticket.placeStart.location}
                           </Text>
                         </div>
                       ),
                     },
                   ]}
                 />
+                <Modal
+                  title="Vertically centered modal dialog"
+                  centered
+                  open={modal2Open}
+                  onOk={() => setModal2Open(false)}
+                  onCancel={() => setModal2Open(false)}
+                >
+                  <SelectLocation
+                    time={myTicket.time}
+                    placeStart={myTicket.placeStart}
+                    placeEnd={myTicket.placeEnd}
+                    valueStartItem={ticket.placeStart.index}
+                    valueEndItem={ticket.placeEnd.index}
+                  />
+                </Modal>
               </div>
             </div>
           </div>

@@ -84,11 +84,8 @@ function Home() {
           <div className="slider-container mt-4">
             <Slider {...settings}>
               {getBusPopulor().map((item, index) => (
-                <Link to="/booking">
-                  <div
-                    key={index}
-                    className="h-[211px] rounded-md bg-[#8a9bb4] mx-2"
-                  >
+                <Link to="/booking" key={index}>
+                  <div className="h-[211px] rounded-md bg-[#8a9bb4] mx-2">
                     <img
                       src={item.src}
                       alt={item.alt}

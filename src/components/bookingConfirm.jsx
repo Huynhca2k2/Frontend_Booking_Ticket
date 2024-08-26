@@ -5,6 +5,7 @@ import {
   Checkbox,
   Divider,
   Drawer,
+  message,
   Modal,
   Radio,
   Timeline,
@@ -78,6 +79,20 @@ function BookingConfirm() {
 
   const handleSubmit = () => {
     const formValues = form.getFieldsValue();
+
+    if (!formValues.email) {
+      message.warning("Bạn chưa nhập Email");
+      return;
+    }
+    if (!formValues.username) {
+      message.warning("Bạn chưa nhập Họ và tên");
+      return;
+    }
+    if (!formValues.phone) {
+      message.warning("Bạn chưa nhập số điện thoại");
+      return;
+    }
+
     setTicket((prevTicket) => ({
       ...prevTicket,
       user: {
@@ -86,6 +101,7 @@ function BookingConfirm() {
         numberPhone: formValues.phone,
       },
     }));
+    message.success("Mua vé thành công!!!");
   };
 
   return (
@@ -368,7 +384,11 @@ function BookingConfirm() {
                           <Text className="!font-bold !text-sm">Điểm trả</Text>
                         </div>
                         <div>
-                          <Button type="link" className="px-0">
+                          <Button
+                            type="link"
+                            className="px-0"
+                            onClick={() => setModal2Open(true)}
+                          >
                             <Text className="!text-sm !font-bold text-[#2474e5] underline">
                               Thay đổi
                             </Text>
@@ -433,7 +453,7 @@ function BookingConfirm() {
                   ]}
                 />
                 <Modal
-                  title="Vertically centered modal dialog"
+                  title="Thay đổi điểm đón/chờ"
                   centered
                   open={modal2Open}
                   onOk={() => setModal2Open(false)}

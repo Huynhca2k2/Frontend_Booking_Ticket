@@ -1,15 +1,32 @@
 import { Alert, Divider, Input, Radio, Space, Tabs, Typography } from "antd";
 import { useState } from "react";
 import { AiOutlineEnvironment } from "react-icons/ai";
+import { useTicket } from "../context/TicketContext";
 
 const { Title, Text } = Typography;
 
-function SelectLocation() {
-  const [value, setValue] = useState(1);
-  const onChange = (e) => {
-    console.log("radio checked", e.target.value);
-    setValue(e.target.value);
+function SelectLocation({ time, placeStart = [], placeEnd = [] }) {
+  const [valueStart, setValueStart] = useState(1);
+  const [valueEnd, setValueEnd] = useState(1);
+  const { ticket, setTicket } = useTicket();
+
+  const onChangeStart = (e) => {
+    console.log("radio checked", placeStart[e.target.value]);
+    setValueStart(e.target.value);
+    setTicket((prevTicket) => ({
+      ...prevTicket,
+      placeStart: placeStart[e.target.value],
+    }));
   };
+  const onChangeEnd = (e) => {
+    console.log("radio checked", placeEnd[e.target.value]);
+    setValueEnd(e.target.value);
+    setTicket((prevTicket) => ({
+      ...prevTicket,
+      placeEnd: placeEnd[e.target.value],
+    }));
+  };
+
   return (
     <div className="flex flex-row">
       <div className="w-1/2">
@@ -20,33 +37,27 @@ function SelectLocation() {
           <Text>Xem điểm đón gần bạn nhất?</Text>
         </div>
         <div className="p-4">
-          <Radio.Group onChange={onChange} value={value}>
+          <Radio.Group onChange={onChangeStart} value={valueStart}>
             <Space direction="vertical">
-              <Radio value={1}>
-                <Title level={5} className="!text-[#0060c4] !font-bold !mb-0">
-                  23:20 - VP Tân Bình
-                </Title>
-                <div className="flex flex-row items-start gap-1">
-                  <div>
-                    <AiOutlineEnvironment className="w-3 h-3 mt-1" />
-                  </div>
-                  <Text>266 Đồng Đen, Phường 10, Tân Bình, Hồ Chí Minh</Text>
-                </div>
-              </Radio>
-              <Radio value={2}>
-                <Title level={5} className="!text-[#0060c4] !font-bold !mb-0">
-                  23:30 - Lăng Cha Cả
-                </Title>
-                <div className="flex flex-row items-start gap-1">
-                  <div>
-                    <AiOutlineEnvironment className="w-3 h-3 mt-1" />
-                  </div>
-                  <Text>
-                    315 Hoàng văn Thụ, Phường 2, Quận Tân Bình, Phường 2, Tân
-                    Bình, Hồ Chí Minh
-                  </Text>
-                </div>
-              </Radio>
+              {placeStart &&
+                placeStart.map((item, index) => {
+                  return (
+                    <Radio value={index} key={index}>
+                      <Title
+                        level={5}
+                        className="!text-[#0060c4] !font-bold !mb-0"
+                      >
+                        {time?.hourStart} - {item?.name}
+                      </Title>
+                      <div className="flex flex-row items-start gap-1">
+                        <div>
+                          <AiOutlineEnvironment className="w-3 h-3 mt-1" />
+                        </div>
+                        <Text>{item?.location}</Text>
+                      </div>
+                    </Radio>
+                  );
+                })}
             </Space>
           </Radio.Group>
         </div>
@@ -63,33 +74,27 @@ function SelectLocation() {
           <Text>Xem điểm trả gần bạn nhất?</Text>
         </div>
         <div className="p-4">
-          <Radio.Group onChange={onChange} value={value}>
+          <Radio.Group onChange={onChangeEnd} value={valueEnd}>
             <Space direction="vertical">
-              <Radio value={1}>
-                <Title level={5} className="!text-[#0060c4] !font-bold !mb-0">
-                  03:20 (25/08) - Ngã 3 Madagui
-                </Title>
-                <div className="flex flex-row items-start gap-1">
-                  <div>
-                    <AiOutlineEnvironment className="w-3 h-3 mt-1" />
-                  </div>
-                  <Text>
-                    Quốc Lộ 20, thị trấn Madagui, Thị trấn Ma Đa Guôi, Đạ Huoai,
-                    Lâm Đồng
-                  </Text>
-                </div>
-              </Radio>
-              <Radio value={2}>
-                <Title level={5} className="!text-[#0060c4] !font-bold !mb-0">
-                  04:20 (25/08) - Siêu thị Coop Mart Bảo Lộc
-                </Title>
-                <div className="flex flex-row items-start gap-1">
-                  <div>
-                    <AiOutlineEnvironment className="w-3 h-3 mt-1" />
-                  </div>
-                  <Text>803 Trần Phú, Phường 2, Bảo Lộc, Lâm Đồng</Text>
-                </div>
-              </Radio>
+              {placeEnd &&
+                placeEnd.map((item, index) => {
+                  return (
+                    <Radio value={index} key={index}>
+                      <Title
+                        level={5}
+                        className="!text-[#0060c4] !font-bold !mb-0"
+                      >
+                        {time?.hourEnd} - {item?.name}
+                      </Title>
+                      <div className="flex flex-row items-start gap-1">
+                        <div>
+                          <AiOutlineEnvironment className="w-3 h-3 mt-1" />
+                        </div>
+                        <Text>{item?.location}</Text>
+                      </div>
+                    </Radio>
+                  );
+                })}
             </Space>
           </Radio.Group>
         </div>

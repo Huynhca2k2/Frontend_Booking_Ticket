@@ -1,5 +1,4 @@
 import BookingBox from "./bookingBox";
-import CustomSearchInput from "./customSearchInput";
 import { Carousel } from "antd";
 import Ticket from "./ticket";
 import { Alert, Tabs, Typography } from "antd";
@@ -10,6 +9,7 @@ import banner1 from "../assets/images/banner-pc_1.jpg";
 import banner2 from "../assets/images/banner-pc_2.jpg";
 import banner3 from "../assets/images/banner-pc_3.jpg";
 import banner4 from "../assets/images/banner-pc_4.jpg";
+import { bookings } from "../apis/configApi";
 
 const { Title, Text } = Typography;
 
@@ -134,10 +134,10 @@ function Booking() {
             </div>
           </Carousel>
           <div className="flex flex-col gap-4">
-            <Ticket />
-            <Ticket />
-            <Ticket />
-            <Ticket />
+            {bookings &&
+              bookings.map((itemBoo, index) => {
+                return <Ticket bookingItem={itemBoo} key={index} />;
+              })}
           </div>
         </div>
       </div>

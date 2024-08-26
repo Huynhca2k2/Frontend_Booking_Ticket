@@ -46,7 +46,7 @@ function Home() {
         />
         <div className="custom-container absolute top-0 left-0 right-0 bottom-[64px] flex flex-col gap-4 items-center justify-center">
           <Title level={3} className="!text-white">
-            Vexere - Cam kết hoàn 150% nếu nhà xe không cung cấp dịch vụ vận
+            BAOKHANG - Cam kết hoàn 150% nếu nhà xe không cung cấp dịch vụ vận
             chuyển (<span className="text-yellow-500 font-bold">*</span>)
           </Title>
           <BookingBox />
@@ -118,7 +118,7 @@ function Home() {
               />
               <Title level={5} className="line-clamp-3 p-3 !text-lg">
                 Giảm đến 50% tối đa 100K khi đặt dịch vụ xe Hải Phòng Travel tại
-                Vexere
+                BAOKHANG
               </Title>
             </div>
             <div className="border-[1px] border-solid border-gray-200 shadow-lg rounded-md w-1/3">
@@ -129,7 +129,7 @@ function Home() {
               />
               <Title level={5} className="line-clamp-3 p-3 !text-lg">
                 Giảm đến 25% dành cho khách hàng lần đầu đặt dịch vụ của nhà xe
-                tại Vexere
+                tại BAOKHANG
               </Title>
             </div>
             <div className="border-[1px] border-solid border-gray-200 shadow-lg rounded-md w-1/3">
@@ -218,7 +218,7 @@ function Home() {
                   Nhiều ưu đãi
                 </Title>
                 <Text className="line-clamp-4">
-                  Hàng ngàn ưu đãi cực chất độc quyền tại Vexere.
+                  Hàng ngàn ưu đãi cực chất độc quyền tại BAOKHANG.
                 </Text>
               </div>
             </div>
@@ -262,7 +262,7 @@ function Home() {
         </div>
 
         <div className="my-10">
-          <Title level={3}>Vexere đã được nhắc đến trên</Title>
+          <Title level={3}>BAOKHANG đã được nhắc đến trên</Title>
           <div className="flex flex-row items-center justify-between h-[44px]">
             <img
               src={logo1}

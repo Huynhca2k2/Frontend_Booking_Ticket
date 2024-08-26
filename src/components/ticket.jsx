@@ -8,21 +8,55 @@ import { message, Steps, theme } from "antd";
 import SelectChair from "./selectChair";
 import SelectLocation from "./selectLocation";
 import { Link } from "react-router-dom";
-const steps = [
-  {
-    title: "Chỗ mong muốn",
-    content: <SelectChair />,
-  },
-  {
-    title: "Điểm đón trả",
-    content: <SelectLocation />,
-  },
-];
+import { useTicket } from "../context/TicketContext";
 
 const { Title, Text } = Typography;
+const calculateDuration = (startTime, endTime) => {
+  const start = new Date(`1970-01-01T${startTime}:00`);
+  const end = new Date(`1970-01-01T${endTime}:00`);
+  const duration = new Date(end - start);
 
-function Ticket() {
+  const hours = duration.getUTCHours();
+  const minutes = duration.getUTCMinutes();
+
+  return `${hours}h${minutes}p`;
+};
+
+function Ticket({ bookingItem }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedChairs, setSelectedChairs] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const { ticket, setTicket } = useTicket();
+
+  const handleAddTime = () => {
+    setTicket((prevTicket) => ({
+      ...prevTicket,
+      chair: selectedChairs,
+      id: bookingItem?.id,
+      time: bookingItem?.time,
+    }));
+  };
+  const steps = [
+    {
+      title: "Chỗ mong muốn",
+      content: (
+        <SelectChair
+          onChairSelect={(selectedChairs) => setSelectedChairs(selectedChairs)}
+        />
+      ),
+    },
+    {
+      title: "Điểm đón trả",
+      content: (
+        <SelectLocation
+          time={bookingItem.time}
+          placeStart={bookingItem.placeStart}
+          placeEnd={bookingItem.placeEnd}
+        />
+      ),
+    },
+  ];
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -34,17 +68,31 @@ function Ticket() {
   };
 
   const { token } = theme.useToken();
-  const [current, setCurrent] = useState(0);
   const next = () => {
+    if (selectedChairs.length === 0) {
+      message.warning("Vui lòng chọn ít nhất một chổ ngồi");
+      return;
+    }
+    console.log(selectedChairs);
     setCurrent(current + 1);
   };
   const prev = () => {
+    setSelectedChairs([]);
     setCurrent(current - 1);
   };
   const items = steps.map((item) => ({
     key: item.title,
     title: item.title,
   }));
+
+  const duration = calculateDuration(
+    bookingItem.time.hourStart,
+    bookingItem.time.hourEnd
+  );
+
+  const availableChairCount = bookingItem.chairs.filter(
+    (chair) => chair.status !== "unavailable"
+  ).length;
 
   return (
     <div className="flex flex-row gap-4 p-4 bg-white rounded-lg hover:shadow-lg">
@@ -56,8 +104,8 @@ function Ticket() {
           className="w-max"
         >
           <img
-            src={imgBus}
-            alt="img bus"
+            src={bookingItem.garage.img}
+            alt={bookingItem.garage.alt}
             className="w-full h-[152px] object-contain"
           />
         </Badge.Ribbon>
@@ -67,46 +115,50 @@ function Ticket() {
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-2 items-center">
             <Title level={5} className="!font-bold !mb-0">
-              An Anh Limousine
+              {bookingItem.garage?.name}
             </Title>
             <Button
               icon={<StarOutlined />}
               type="primary"
               className="h-[21px] px-2 gap-1"
             >
-              4.7
+              {bookingItem.rating}
             </Button>
           </div>
-          <Text>Limousine 24 Phòng Đôi</Text>
+          <Text>{bookingItem.vehicleType}</Text>
           <div className="relative">
             <Timeline
               items={[
                 {
                   color: "#484848",
-                  children: "13:00 • 116 Quốc lộ 13",
+                  children: (
+                    <>{`${bookingItem.time?.hourStart} • ${bookingItem.placeStart[0]?.name}`}</>
+                  ),
                 },
                 {
                   dot: <AiOutlineEnvironment />,
                   color: "#707070",
-                  children: "19:45 • Vp Đà Lạt",
+                  children: (
+                    <>{`${bookingItem.time?.hourEnd} • ${bookingItem.placeEnd[0]?.name}`}</>
+                  ),
                 },
               ]}
             />
             <Text className="absolute left-0 bottom-0" type="secondary">
-              Thời gian: 6h45p
+              Thời gian: {duration}
             </Text>
           </div>
         </div>
 
         <div className="flex flex-col justify-between items-end">
           <Title level={4} className="!font-bold !text-[#2474e5]">
-            Từ 350.000đ
+            Từ {bookingItem.ticketPrice}
           </Title>
           <div className="border-[1px] border-[#27ae60] px-2 py-1 rounded w-max relative flash-sale">
-            <Text>Giảm 25%</Text>
+            <Text>{bookingItem.flashSale}</Text>
           </div>
           <Title level={5} className="!font-normal">
-            Còn 12 chỗ trống
+            Còn {availableChairCount} chỗ trống
           </Title>
           <div className="flex flex-row items-end gap-2">
             <Button type="link" className="underline font-medium">
@@ -120,7 +172,7 @@ function Ticket() {
               Chọn chuyến
             </Button>
             <Modal
-              title="Chọn chuyến - An Anh Limousine"
+              title={`Chuyến: ${bookingItem.from} : ${bookingItem.to} - ${bookingItem.garage.name}`}
               open={isModalOpen}
               onOk={handleOk}
               onCancel={handleCancel}
@@ -143,12 +195,14 @@ function Ticket() {
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex fle-row gap-1">
                       <span className="!font-normal ">Ghế:</span>
-                      <span className="!font-bold !text-[#2474e5]">G3</span>
+                      <span className="!font-bold !text-[#2474e5]">
+                        {selectedChairs.join(", ")}
+                      </span>
                     </div>
                     <div className="flex flex-row items-center gap-2">
                       <span className="!font-normal">Tổng cộng:</span>
                       <span className="!font-bold !text-[#2474e5]">
-                        280,000 đ
+                        {selectedChairs.length * bookingItem.ticketPrice} đ
                       </span>
 
                       <Button
@@ -163,7 +217,9 @@ function Ticket() {
                 )}
                 {current === steps.length - 1 && (
                   <Link to="/booking-confirm" className="block ml-auto">
-                    <Button type="primary">Tiếp tục</Button>
+                    <Button type="primary" onClick={handleAddTime}>
+                      Tiếp tục
+                    </Button>
                   </Link>
                 )}
               </div>

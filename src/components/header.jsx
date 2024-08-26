@@ -4,7 +4,7 @@ import {
   PhoneOutlined,
 } from "@ant-design/icons";
 import { Button, Dropdown, Space } from "antd";
-import imgLogo from "../assets/images/logoBooking.png";
+import imgLogo from "../assets/images/logo-main.jpg";
 import { Link } from "react-router-dom";
 
 const items = [
@@ -20,8 +20,8 @@ const items = [
 
 function Header() {
   return (
-    <div className="px-5 py-5 flex flex-row items-center justify-between bg-[#2474e5] border-b border-sky-400">
-      <Link to="/" className="w-[148px] h-[40px] block">
+    <div className="px-5 py-2 flex flex-row items-center justify-between bg-white border-b border-sky-400">
+      <Link to="/" className="w-[148px] h-[60px] block">
         <img
           src={imgLogo}
           alt="pic logo"
@@ -29,7 +29,7 @@ function Header() {
         />
       </Link>
       <div className="flex flex-row items-center">
-        <Button type="link" className="font-semibold text-white">
+        <Button type="link" className="font-semibold text-[#2474e5]">
           Đơn hàng của tôi
         </Button>
         <Dropdown
@@ -41,23 +41,26 @@ function Header() {
             type="link"
             icon={<CaretDownOutlined />}
             iconPosition="end"
-            className="font-semibold text-white"
+            className="font-semibold text-[#2474e5]"
           >
             Trở thành đối tác
           </Button>
         </Dropdown>
-        <Button type="link" className="font-semibold text-white">
-          Mở bán vé trên Vexere
+        <Button type="link" className="font-semibold text-[#2474e5]">
+          Mở bán vé trên BAOKHANG
         </Button>
         <div className="flex gap-3">
           <Button
+            type="primary"
             icon={<PhoneOutlined />}
             iconPosition="start"
             className="font-semibold"
           >
             Hotline 24/7
           </Button>
-          <Button className="font-semibold">Đăng nhập</Button>
+          <Button type="primary" className="font-semibold">
+            Đăng nhập
+          </Button>
         </div>
       </div>
     </div>

@@ -126,7 +126,7 @@ function Footer() {
       </div>
       <div className="custom-container flex flex-col items-center p-6">
         <Title level={4} className="!font-bold">
-          Công ty TNHH Thương Mại Dịch Vụ Vexere
+          Công ty TNHH Thương Mại Dịch Vụ BAOKHANG
         </Title>
         <Text type="secondary" className="text-center">
           Địa chỉ đăng ký kinh doanh: 8C Chữ Đồng Tử, Phường 7, Quận Tân Bình,

@@ -1,8 +1,15 @@
 import { Alert, Tabs } from "antd";
 import CustomSearchInput from "./customSearchInput";
 import { FaBus, FaPlane } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 function BookingBox() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const from = searchParams.get("from") || "";
+  const to = searchParams.get("to") || "";
+  const date = searchParams.get("date") || null;
+
   return (
     <div className="bg-white w-full px-4 pb-4 rounded-xl shadow-sm border border-gray-100">
       <Tabs
@@ -17,7 +24,13 @@ function BookingBox() {
               </span>
             ),
             key: "1",
-            children: <CustomSearchInput />,
+            children: (
+              <CustomSearchInput
+                fromValue={from}
+                toValue={to}
+                dateValue={date}
+              />
+            ),
           },
           {
             label: (

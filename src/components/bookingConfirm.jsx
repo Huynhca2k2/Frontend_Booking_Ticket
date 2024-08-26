@@ -12,9 +12,10 @@ import { Typography } from "antd";
 import { Form, Input, Select } from "antd";
 import iconProtect from "../assets/images/icon_protect_trip.png";
 import { FaBus } from "react-icons/fa";
-import Test from "./test";
 import { AiOutlineEnvironment } from "react-icons/ai";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTicket } from "../context/TicketContext";
 
 const { Option } = Select;
 
@@ -45,12 +46,14 @@ const onChange = (e) => {
 function BookingConfirm() {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
+  const { ticket } = useTicket();
   const showDrawer = () => {
     setOpen(true);
   };
   const onClose = () => {
     setOpen(false);
   };
+  const navigate = useNavigate();
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -63,6 +66,8 @@ function BookingConfirm() {
       </Select>
     </Form.Item>
   );
+
+  console.log("Dữ liệu ticket:", ticket);
   return (
     <div className="bg-[#f2f2f2]">
       <div className="custom-container pt-4">
@@ -70,6 +75,7 @@ function BookingConfirm() {
           icon={<LeftOutlined />}
           type="link"
           className="!font-semibold !pl-0"
+          onClick={() => navigate(-1)}
         >
           Quay lại
         </Button>
@@ -193,6 +199,12 @@ function BookingConfirm() {
                 showIcon
               />
             </div>
+            <Button
+              type="primary"
+              className="h-full font-medium text-lg text-[#141414] bg-[#ffd333]  hover:!bg-yellow-400 hover:!border-[#ffd333] hover:!text-gray-600"
+            >
+              Xác nhận đặt vé
+            </Button>
           </div>
           <div className="w-5/12 flex flex-col gap-4">
             <div className="bg-white p-4 rounded-xl  border border-gray-200">
@@ -229,7 +241,7 @@ function BookingConfirm() {
                   <div className="flex flex-row items-center gap-2">
                     <FaBus />
                     <Text className="!text-sm !font-bold" type="secondary">
-                      CN, 25/08/2024
+                      {ticket.time.dateStart}
                     </Text>
                   </div>
                   <Text className="!text-sm !font-bold text-[#2474e5] underline">

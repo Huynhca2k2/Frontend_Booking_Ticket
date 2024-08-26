@@ -8,23 +8,26 @@ import BookingConfirm from "./components/bookingConfirm";
 import PaymentMethod from "./components/paymentMethod";
 import MyTicket from "./components/myTicket";
 import Login from "./components/login";
+import { TicketProvider } from "./context/TicketContext";
 
 function App() {
   return (
     <>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/my-ticket" element={<MyTicket />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/info-user" element={<InfoUser />} />
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/booking-confirm" element={<BookingConfirm />} />
-          <Route path="/payment-method" element={<PaymentMethod />} />
-        </Routes>
-        <Footer />
-      </Router>
+      <TicketProvider>
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/my-ticket" element={<MyTicket />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/info-user" element={<InfoUser />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/booking-confirm" element={<BookingConfirm />} />
+            <Route path="/payment-method" element={<PaymentMethod />} />
+          </Routes>
+          <Footer />
+        </Router>
+      </TicketProvider>
     </>
   );
 }

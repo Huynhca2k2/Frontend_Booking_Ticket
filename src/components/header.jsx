@@ -6,19 +6,21 @@ import {
 import { Button, Dropdown, Space } from "antd";
 import imgLogo from "../assets/images/logo-main.jpg";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const items = [
   {
     key: "1",
-    label: <div>1st menu item</div>,
+    label: <div>Phần mềm nhà xe baokhang</div>,
   },
   {
     key: "2",
-    label: <div>2st menu item</div>,
+    label: <div>Phần mềm đại lý baokhang</div>,
   },
 ];
 
 function Header() {
+  const navigate = useNavigate();
   return (
     <div className="px-5 py-2 flex flex-row items-center justify-between bg-white border-b border-sky-400">
       <Link to="/" className="w-[148px] h-[60px] block">
@@ -59,7 +61,7 @@ function Header() {
             Hotline 24/7
           </Button>
           <Button type="primary" className="font-semibold">
-            Đăng nhập
+            <Link to="/login">Đăng nhập</Link>
           </Button>
         </div>
       </div>

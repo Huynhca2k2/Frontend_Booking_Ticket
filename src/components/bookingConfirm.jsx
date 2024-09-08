@@ -18,8 +18,9 @@ import { AiOutlineEnvironment } from "react-icons/ai";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTicket } from "../context/TicketContext";
-import { bookings } from "../apis/configApi";
-import SelectLocation from "./selectLocation";
+
+import SelectLocation from "./SelectLocation";
+import { bookings } from "../services/api";
 
 const { Option } = Select;
 

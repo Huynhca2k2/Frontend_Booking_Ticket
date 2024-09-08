@@ -7,7 +7,7 @@ import toImg from "../assets/images/to.png";
 import fromImg from "../assets/images/from.png";
 import dateImg from "../assets/images/date.png";
 import { SwapOutlined } from "@ant-design/icons";
-import { provinces } from "../apis/configApi";
+import { provinces } from "../services/api";
 
 const { Text } = Typography;
 

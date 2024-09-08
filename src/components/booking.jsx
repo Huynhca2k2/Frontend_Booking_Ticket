@@ -1,6 +1,5 @@
-import BookingBox from "./bookingBox";
-import { Carousel, Empty } from "antd";
-import Ticket from "./ticket";
+import BookingBox from "./BookingBox";
+import { Carousel, Empty, Pagination } from "antd";
 import { Alert, Tabs, Typography } from "antd";
 import { Input, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
@@ -9,9 +8,10 @@ import banner1 from "../assets/images/banner-pc_1.jpg";
 import banner2 from "../assets/images/banner-pc_2.jpg";
 import banner3 from "../assets/images/banner-pc_3.jpg";
 import banner4 from "../assets/images/banner-pc_4.jpg";
-import { bookings } from "../apis/configApi";
-import { items } from "../apis/configApi";
+
 import { useLocation } from "react-router-dom";
+import { bookings, items } from "../services/api";
+import Ticket from "./Ticket";
 
 const { Title, Text } = Typography;
 
@@ -100,6 +100,7 @@ function Booking() {
                 }
               />
             )}
+            <Pagination align="center" defaultCurrent={1} total={12} />
           </div>
         </div>
       </div>

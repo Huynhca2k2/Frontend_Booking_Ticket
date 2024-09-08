@@ -4,7 +4,6 @@ const TicketContext = createContext();
 
 export const TicketProvider = ({ children }) => {
   const [ticket, setTicket] = useState({
-    id: 0,
     user: {
       name: "",
       email: "",

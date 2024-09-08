@@ -1,5 +1,5 @@
 import { Alert, Tabs } from "antd";
-import CustomSearchInput from "./customSearchInput";
+import CustomSearchInput from "./CustomSearchInput";
 import { FaBus, FaPlane } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 

@@ -20,22 +20,15 @@ import logo3 from "../assets/images/logo-dantri.png";
 import logo4 from "../assets/images/logo-fbnc.png";
 import logo5 from "../assets/images/logo-tuoitre.png";
 import logo6 from "../assets/images/logo-vtv.png";
-import Slider from "react-slick";
-import { getBusPopulor } from "./../apis/configApi";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
 import { Link } from "react-router-dom";
-import BookingBox from "./bookingBox";
+import BookingBox from "./BookingBox";
+import { getBusPopulor } from "../services/api";
 
 const { Title, Text } = Typography;
 
 function Home() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    autoplay: true,
-  };
   return (
     <>
       <div className="h-[480px] relative">
@@ -82,25 +75,38 @@ function Home() {
         <div className="mt-10">
           <Title level={3}>Tuyến đường phổ biến</Title>
           <div className="slider-container mt-4">
-            <Slider {...settings}>
+            <Swiper
+              slidesPerView={4}
+              spaceBetween={20}
+              autoplay={{
+                delay: 2000,
+                disableOnInteraction: false,
+              }}
+              navigation={{
+                clickable: true,
+              }}
+              modules={[Navigation, Autoplay]}
+            >
               {getBusPopulor().map((item, index) => (
-                <Link to="/booking" key={index}>
-                  <div className="h-[211px] rounded-md bg-[#8a9bb4] mx-2">
-                    <img
-                      src={item.src}
-                      alt={item.alt}
-                      className="w-full h-[116px] object-cover rounded-t-md"
-                    />
-                    <div className="p-3 ">
-                      <Title level={4} className="!mb-0 !text-white">
-                        {item.desc}
-                      </Title>
-                      <Text className="!text-white">{item.price}</Text>
+                <SwiperSlide key={index}>
+                  <Link to="/booking">
+                    <div className="h-[211px] rounded-md bg-[#8a9bb4]">
+                      <img
+                        src={item.src}
+                        alt={item.alt}
+                        className="w-full h-[116px] object-cover rounded-t-md"
+                      />
+                      <div className="p-3 ">
+                        <Title level={4} className="!mb-0 !text-white">
+                          {item.desc}
+                        </Title>
+                        <Text className="!text-white">{item.price}</Text>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </SwiperSlide>
               ))}
-            </Slider>
+            </Swiper>
           </div>
         </div>
 

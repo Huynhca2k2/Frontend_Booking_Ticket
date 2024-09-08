@@ -55,3 +55,9 @@ body {
 .ant-timeline-item-left .ant-timeline-item-label {
   padding-right: 8px;
 }
+
+.small-rate .ant-rate-star {
+  font-size: 14px;
+}
+
+

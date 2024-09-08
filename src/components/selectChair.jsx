@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Typography } from "antd";
-import Chair from "./chair";
-import { listChair } from "../apis/configApi";
+import Chair from "./Chair";
+import { listChair } from "../services/api";
 
 const { Title, Text } = Typography;
 

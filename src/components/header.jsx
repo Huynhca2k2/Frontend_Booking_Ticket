@@ -6,6 +6,11 @@ import {
 import { Button, Dropdown, Space } from "antd";
 import imgLogo from "../assets/images/logo-main.jpg";
 import { Link } from "react-router-dom";
+import LoginRegister from "./LoginRegister";
+import { useEffect, useState } from "react";
+import User from "./User";
+import { useUser } from "../context/UserContext";
+import { fetchUserInfo } from "../services/auth";
 
 const items = [
   {
@@ -18,7 +23,9 @@ const items = [
   },
 ];
 
-function Header() {
+function Header({isLogin, setIsLogin}) {
+  
+
   return (
     <div className="px-5 py-2 flex flex-row items-center justify-between bg-white border-b border-sky-400">
       <Link to="/" className="w-[148px] h-[60px] block">
@@ -58,9 +65,7 @@ function Header() {
           >
             Hotline 24/7
           </Button>
-          <Button type="primary" className="font-semibold">
-            Đăng nhập
-          </Button>
+          {isLogin ? <User setIsLogin={setIsLogin} /> : <LoginRegister />}
         </div>
       </div>
     </div>

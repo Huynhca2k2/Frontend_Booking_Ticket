@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CaretDownOutlined,
   CaretUpOutlined,
@@ -17,6 +17,12 @@ import LocationBus from "./LocationBus";
 import GatingBus from "./GatingBus";
 import PictureBus from "./PictureBus";
 import PolicyBus from "./PolicyBus";
+import {
+  addHoursToDateTime,
+  getCurrentDate,
+  getHourFromDateTime,
+} from "../services/api";
+import { useUser } from "../context/UserContext";
 
 const { Title, Text } = Typography;
 const calculateDuration = (startTime, endTime) => {
@@ -30,27 +36,42 @@ const calculateDuration = (startTime, endTime) => {
   return `${hours}h${minutes}p`;
 };
 
-function Ticket({ bookingItem }) {
+function Ticket({ busesCustom }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedChairs, setSelectedChairs] = useState([]);
   const [current, setCurrent] = useState(0);
+  const [tripItem, setTripItem] = useState(null);
   const { ticket, setTicket } = useTicket();
+  const { tripsContext } = useUser();
+
+  useEffect(() => {
+    const tripOfBus = tripsContext.find(
+      (booking) => Number(booking?.id) === Number(busesCustom?.tripId)
+    );
+    setTripItem(tripOfBus);
+  }, [tripItem]);
 
   const handleAddTime = () => {
     setTicket((prevTicket) => ({
       ...prevTicket,
-      chairs: selectedChairs,
-      id: bookingItem?.id,
-      time: bookingItem?.time,
+      creationDate: getCurrentDate(),
+      discount: 20.0,
+      status: true,
+      price: selectedChairs.length * busesCustom?.priceReal,
+      tripId: tripItem?.id,
+      busId: Number(busesCustom?.id),
+      seatIds: selectedChairs,
     }));
   };
+
   const steps = [
     {
       title: "Chỗ mong muốn",
       content: (
         <SelectChair
           onChairSelect={(selectedChairs) => setSelectedChairs(selectedChairs)}
+          chairList={busesCustom?.seats}
         />
       ),
     },
@@ -58,9 +79,10 @@ function Ticket({ bookingItem }) {
       title: "Điểm đón trả",
       content: (
         <SelectLocation
-          time={bookingItem.time}
-          placeStart={bookingItem.placeStart}
-          placeEnd={bookingItem.placeEnd}
+          time={tripItem?.departureTime}
+          travelTime={tripItem?.travelTime}
+          placeStart={tripItem?.pickupLocations}
+          placeEnd={tripItem?.dropoffLocations}
         />
       ),
     },
@@ -95,12 +117,7 @@ function Ticket({ bookingItem }) {
     setIsTabOpen(!isTabOpen);
   };
 
-  const duration = calculateDuration(
-    bookingItem.time.hourStart,
-    bookingItem.time.hourEnd
-  );
-
-  const availableChairCount = bookingItem.chairs.filter(
+  const availableChairCount = busesCustom?.seats?.filter(
     (chair) => chair.status !== "unavailable"
   ).length;
 
@@ -108,12 +125,18 @@ function Ticket({ bookingItem }) {
     {
       label: "Điểm đón, trả",
       key: "1",
-      children: <LocationBus />,
+      children: (
+        <LocationBus
+          departureTime={tripItem?.departureTime}
+          pickupLocations={tripItem?.pickupLocations}
+          dropoffLocations={tripItem?.dropoffLocations}
+        />
+      ),
     },
     {
       label: "Đánh giá",
       key: "2",
-      children: <GatingBus />,
+      children: <GatingBus rating={busesCustom?.rating} />,
     },
     {
       label: "Hình ảnh",
@@ -138,8 +161,8 @@ function Ticket({ bookingItem }) {
             className="w-max"
           >
             <img
-              src={bookingItem.garage.img}
-              alt={bookingItem.garage.alt}
+              src={busesCustom?.image}
+              alt={busesCustom?.descBus}
               className="w-full h-[152px] object-contain"
             />
           </Badge.Ribbon>
@@ -149,47 +172,52 @@ function Ticket({ bookingItem }) {
           <div className="flex flex-col gap-2">
             <div className="flex flex-row gap-2 items-center">
               <Title level={5} className="!font-bold !mb-0">
-                {bookingItem.garage?.name}
+                {busesCustom?.name}
               </Title>
               <Button
                 icon={<StarOutlined />}
                 type="primary"
                 className="h-[21px] px-2 gap-1"
               >
-                {bookingItem.rating}
+                {busesCustom?.rating}
               </Button>
             </div>
-            <Text>{bookingItem.vehicleType}</Text>
+            <Text>Loại xe: {busesCustom?.type}</Text>
             <div className="relative">
               <Timeline
                 items={[
                   {
                     color: "#484848",
                     children: (
-                      <>{`${bookingItem.time?.hourStart} • ${bookingItem.placeStart[0]?.name}`}</>
+                      <>{`${addHoursToDateTime(busesCustom?.departureTime)} • ${
+                        tripItem?.pickupLocations[0]?.name
+                      }`}</>
                     ),
                   },
                   {
                     dot: <AiOutlineEnvironment />,
                     color: "#707070",
                     children: (
-                      <>{`${bookingItem.time?.hourEnd} • ${bookingItem.placeEnd[0]?.name}`}</>
+                      <>{`${addHoursToDateTime(
+                        tripItem?.departureTime,
+                        tripItem?.travelTime
+                      )} • ${tripItem?.dropoffLocations[0]?.name}`}</>
                     ),
                   },
                 ]}
               />
               <Text className="absolute left-0 bottom-0" type="secondary">
-                Thời gian: {duration}
+                Thời gian: {tripItem?.travelTime} Giờ
               </Text>
             </div>
           </div>
 
           <div className="flex flex-col justify-between items-end">
             <Title level={4} className="!font-bold !text-[#2474e5]">
-              Từ {bookingItem.ticketPrice}
+              Từ {busesCustom?.priceReal} đ
             </Title>
             <div className="border-[1px] border-[#27ae60] px-2 py-1 rounded w-max relative flash-sale">
-              <Text>{bookingItem.flashSale}</Text>
+              <Text>Giảm 20 %</Text>
             </div>
             <Title level={5} className="!font-normal">
               Còn {availableChairCount} chỗ trống
@@ -212,7 +240,7 @@ function Ticket({ bookingItem }) {
                 Chọn chuyến
               </Button>
               <Modal
-                title={`Chuyến: ${bookingItem.from} : ${bookingItem.to} - ${bookingItem.garage.name}`}
+                title={`Chuyến: ${tripItem?.departureLocation} : ${tripItem?.arrivalLocation} - ${busesCustom?.name}`}
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -242,7 +270,7 @@ function Ticket({ bookingItem }) {
                       <div className="flex flex-row items-center gap-2">
                         <span className="!font-normal">Tổng cộng:</span>
                         <span className="!font-bold !text-[#2474e5]">
-                          {selectedChairs.length * bookingItem.ticketPrice} đ
+                          {selectedChairs.length * busesCustom?.priceReal} đ
                         </span>
 
                         <Button

@@ -2,11 +2,13 @@ import { Alert, Divider, Input, Radio, Space, Tabs, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { AiOutlineEnvironment } from "react-icons/ai";
 import { useTicket } from "../context/TicketContext";
+import { addHoursToDateTime } from "../services/api";
 
 const { Title, Text } = Typography;
 
 function SelectLocation({
   time,
+  travelTime,
   placeStart = [],
   placeEnd = [],
   valueStartItem = 0,
@@ -22,8 +24,8 @@ function SelectLocation({
     setValueEnd(valueEndItem);
     setTicket((prevTicket) => ({
       ...prevTicket,
-      placeStart: placeStart[valueStartItem],
-      placeEnd: placeEnd[valueEndItem],
+      pickupLocationId: placeStart[valueStartItem]?.id,
+      dropoffLocationId: placeEnd[valueEndItem]?.id,
     }));
   }, [valueStartItem, valueEndItem]);
 
@@ -32,7 +34,7 @@ function SelectLocation({
     setValueStart(e.target.value);
     setTicket((prevTicket) => ({
       ...prevTicket,
-      placeStart: placeStart[e.target.value],
+      pickupLocationId: placeStart[e.target.value]?.id,
     }));
   };
   const onChangeEnd = (e) => {
@@ -40,7 +42,7 @@ function SelectLocation({
     setValueEnd(e.target.value);
     setTicket((prevTicket) => ({
       ...prevTicket,
-      placeEnd: placeEnd[e.target.value],
+      dropoffLocationId: placeEnd[e.target.value]?.id,
     }));
   };
 
@@ -64,13 +66,13 @@ function SelectLocation({
                         level={5}
                         className="!text-[#0060c4] !font-bold !mb-0"
                       >
-                        {time?.hourStart} - {item?.name}
+                        {addHoursToDateTime(time)} - {item?.name}
                       </Title>
                       <div className="flex flex-row items-start gap-1">
                         <div>
                           <AiOutlineEnvironment className="w-3 h-3 mt-1" />
                         </div>
-                        <Text>{item?.location}</Text>
+                        <Text>{item?.address}</Text>
                       </div>
                     </Radio>
                   );
@@ -101,13 +103,13 @@ function SelectLocation({
                         level={5}
                         className="!text-[#0060c4] !font-bold !mb-0"
                       >
-                        {time?.hourEnd} - {item?.name}
+                        {addHoursToDateTime(time, travelTime)} - {item?.name}
                       </Title>
                       <div className="flex flex-row items-start gap-1">
                         <div>
                           <AiOutlineEnvironment className="w-3 h-3 mt-1" />
                         </div>
-                        <Text>{item?.location}</Text>
+                        <Text>{item?.address}</Text>
                       </div>
                     </Radio>
                   );

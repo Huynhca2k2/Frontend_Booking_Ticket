@@ -5,24 +5,24 @@ import { listChair } from "../services/api";
 
 const { Title, Text } = Typography;
 
-const SelectChair = ({ onChairSelect }) => {
-  const [chairs, setChairs] = useState(listChair);
+const SelectChair = ({ onChairSelect, chairList }) => {
+  const [chairs, setChairs] = useState(chairList);
 
   const handleClick = (clickedChair) => {
-    if (clickedChair.status !== "unavailable") {
+    if (clickedChair?.status !== "UNAVAILABLE") {
       const updatedChairs = chairs.map((chair) =>
-        chair.codeChair === clickedChair.codeChair
+        chair?.seatCode === clickedChair?.seatCode
           ? {
               ...chair,
-              status: chair.status === "available" ? "selected" : "available",
+              status: chair.status === "AVAILABLE" ? "SELECTED" : "AVAILABLE",
             }
           : chair
       );
       setChairs(updatedChairs);
       onChairSelect(
         updatedChairs
-          .filter((chair) => chair.status === "selected")
-          .map((chair) => chair.codeChair)
+          .filter((chair) => chair.status === "SELECTED")
+          .map((chair) => chair?.id)
       );
     }
   };
@@ -37,15 +37,15 @@ const SelectChair = ({ onChairSelect }) => {
         <div className="flex flex-col gap-4 w-1/3">
           <Title level={5}>Chú thích</Title>
           <div className="flex flex-row items-center gap-2">
-            <Chair status="unavailable" />
+            <Chair status="AVAILABLE" />
             <Text>Ghế không bán</Text>
           </div>
           <div className="flex flex-row items-center gap-2">
-            <Chair status="selected" />
+            <Chair status="SELECTED" />
             <Text>Ghế đang chọn</Text>
           </div>
           <div className="flex flex-row items-center gap-2">
-            <Chair status="available" />
+            <Chair status="UNAVAILABLE" />
             <Text>Ghế còn trống</Text>
           </div>
         </div>
@@ -71,8 +71,8 @@ const SelectChair = ({ onChairSelect }) => {
             <div className="flex flex-row flex-wrap gap-2">
               {firstHalf.map((chair) => (
                 <Chair
-                  key={chair.codeChair}
-                  status={chair.status}
+                  key={chair?.seatCode}
+                  status={chair?.status}
                   onClick={() => handleClick(chair)}
                 />
               ))}
@@ -90,8 +90,8 @@ const SelectChair = ({ onChairSelect }) => {
             <div className="flex flex-row flex-wrap gap-2">
               {secondHalf.map((chair) => (
                 <Chair
-                  key={chair.codeChair}
-                  status={chair.status}
+                  key={chair?.seatCode}
+                  status={chair?.status}
                   onClick={() => handleClick(chair)}
                 />
               ))}

@@ -11,7 +11,7 @@ function BookingBox() {
   const date = searchParams.get("date") || null;
 
   return (
-    <div className="bg-white w-full px-4 pb-4 rounded-xl shadow-sm border border-gray-100">
+    <div className="bg-white w-full px-4 pb-4 rounded-xl shadow-sm border border-gray-100 ">
       <Tabs
         defaultActiveKey="1"
         centered

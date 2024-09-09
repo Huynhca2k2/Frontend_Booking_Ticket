@@ -3,7 +3,7 @@ import { Tooltip } from "antd";
 
 const Chair = ({ status, onClick, codeChair }) => {
   const props = {
-    available: {
+    AVAILABLE: {
       fill: "#FFF",
       stroke: "#B8B8B8",
       iconSelectedFill: "transparent",
@@ -11,14 +11,14 @@ const Chair = ({ status, onClick, codeChair }) => {
       text: codeChair,
       cursor: "cursor-pointer",
     },
-    unavailable: {
+    UNAVAILABLE: {
       fill: "#e0e0e0",
       stroke: "#f2f2f2",
       iconSelectedFill: "transparent",
       iconDisabledFill: "#f2f2f2",
       cursor: "cursor-not-allowed",
     },
-    selected: {
+    SELECTED: {
       fill: "#8be5b0",
       stroke: "#27ae60",
       iconSelectedFill: "#27ae60",
@@ -29,7 +29,7 @@ const Chair = ({ status, onClick, codeChair }) => {
   };
 
   const { fill, stroke, iconSelectedFill, iconDisabledFill, cursor, text } =
-    props[status] || props.available;
+    props[status] || props.AVAILABLE;
 
   return (
     <Tooltip placement="top" title={text || ""}>

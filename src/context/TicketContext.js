@@ -4,20 +4,16 @@ const TicketContext = createContext();
 
 export const TicketProvider = ({ children }) => {
   const [ticket, setTicket] = useState({
-    user: {
-      name: "",
-      email: "",
-      numberPhone: "",
-    },
-    time: {
-      hourStart: "",
-      dateStart: "",
-      hourEnd: "",
-      dateEnd: "",
-    },
-    placeStart: {},
-    placeEnd: {},
-    chairs: [],
+    price: 0.0,
+    creationDate: "",
+    discount: 0.0,
+    status: true,
+    userId: "",
+    tripId: 0,
+    busId: 0,
+    pickupLocationId: 0,
+    dropoffLocationId: 0,
+    seatIds: [],
   });
 
   return (

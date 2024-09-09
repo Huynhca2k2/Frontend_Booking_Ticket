@@ -49,7 +49,7 @@ const comments = [
   },
 ];
 
-const GatingBus = () => {
+const GatingBus = ({ rating }) => {
   return (
     <div>
       <div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ const GatingBus = () => {
           type="primary"
           className="h-[24px] rounded-none px-2 gap-1"
         >
-          4.7
+          {rating}
         </Button>
         <Rate disabled defaultValue={4} />
         <Text className="!font-medium !text-gray-600"> • (20 đánh giá)</Text>

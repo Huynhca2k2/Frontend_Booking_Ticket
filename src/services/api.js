@@ -68,6 +68,21 @@ export const getBusPopulor = () => {
   return response;
 };
 
+export function addHoursToDateTime(dateTimeString, hoursToAdd = 0) {
+  const date = new Date(dateTimeString);
+  date.setHours(date.getHours() + hoursToAdd);
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+export function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 export const provinces = [
   { name: "An Giang", slug: "an-giang" },
   { name: "Bà Rịa - Vũng Tàu", slug: "ba-ria-vung-tau" },

@@ -15,12 +15,14 @@ import { Form, Input, Select } from "antd";
 import iconProtect from "../assets/images/icon_protect_trip.png";
 import { FaBus } from "react-icons/fa";
 import { AiOutlineEnvironment } from "react-icons/ai";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { redirect, useNavigate } from "react-router-dom";
 import { useTicket } from "../context/TicketContext";
 
 import SelectLocation from "./SelectLocation";
-import { bookings } from "../services/api";
+import { addHoursToDateTime, bookings } from "../services/api";
+import { useUser } from "../context/UserContext";
+import LoginRegister from "./LoginRegister";
 
 const { Option } = Select;
 
@@ -50,13 +52,58 @@ const onChange = (e) => {
 
 function BookingConfirm() {
   const [modal2Open, setModal2Open] = useState(false);
-  const [form] = Form.useForm();
+  const [busCurrent, setBusCurrent] = useState(null);
   const [open, setOpen] = useState(false);
   const { ticket, setTicket } = useTicket();
-  const myTicket = bookings.find((booking) => booking.id === ticket.id);
+  const { tripCurrent, setTripCurrent, tripsContext, user } = useUser();
 
-  //xem value cua form submit
-  console.log(ticket);
+  const navigate = useNavigate();
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (user) {
+      form.setFieldsValue({
+        email: user.email || "",
+        username: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+        phone: user.phoneNumber || "",
+      });
+    } else {
+      form.setFieldsValue({
+        email: "",
+        username: "",
+        phone: "",
+      });
+    }
+  }, [user, form]);
+
+  useEffect(() => {
+    if (tripsContext) {
+      const myTrip = tripsContext.find(
+        (booking) => booking?.id === ticket?.tripId
+      );
+
+      const myBus = myTrip?.buses?.find(
+        (item) => Number(item?.id) === ticket?.busId
+      );
+
+      setTripCurrent(myTrip);
+      setBusCurrent(myBus);
+    }
+    if (tripsContext === null) navigate("/");
+  }, [tripCurrent, busCurrent]);
+
+  const handleChangeEmail = (e) => {
+    form.setFieldsValue({ email: e.target.value });
+  };
+
+  const handleChangeFullName = (e) => {
+    form.setFieldsValue({ username: e.target.value });
+  };
+
+  const handleChangeNumberPhone = (e) => {
+    form.setFieldsValue({ phone: e.target.value });
+  };
 
   const showDrawer = () => {
     setOpen(true);
@@ -64,7 +111,6 @@ function BookingConfirm() {
   const onClose = () => {
     setOpen(false);
   };
-  const navigate = useNavigate();
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -96,14 +142,12 @@ function BookingConfirm() {
 
     setTicket((prevTicket) => ({
       ...prevTicket,
-      user: {
-        name: formValues.username,
-        email: formValues.email,
-        numberPhone: formValues.phone,
-      },
+      userId: user?.id,
     }));
+
     message.success("Mua vé thành công!!!");
   };
+  console.log(ticket);
 
   return (
     <div className="bg-[#f2f2f2]">
@@ -119,6 +163,15 @@ function BookingConfirm() {
         <div className="flex flex-row gap-4 mt-4">
           <div className="w-7/12 flex flex-col gap-4">
             <div className="bg-white p-4 rounded-xl border border-gray-200">
+              {!user && (
+                <div className="flex flex-row gap-4 items-center rounded-lg border mb-4 border-gray-600 p-2 justify-between">
+                  <Title level={5} className="!text-sm !mb-0">
+                    Đăng nhập để tự điền thông tin và nhận điểm khi đặt vé
+                  </Title>
+                  <LoginRegister />
+                </div>
+              )}
+
               <Title level={4} className="!font-bold">
                 Thông tin liên hệ
               </Title>
@@ -148,7 +201,7 @@ function BookingConfirm() {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input onChange={handleChangeEmail} />
                 </Form.Item>
 
                 <Form.Item
@@ -162,7 +215,7 @@ function BookingConfirm() {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input onChange={handleChangeFullName} />
                 </Form.Item>
 
                 <Form.Item
@@ -180,6 +233,7 @@ function BookingConfirm() {
                     style={{
                       width: "100%",
                     }}
+                    onChange={handleChangeNumberPhone}
                   />
                 </Form.Item>
               </Form>
@@ -250,17 +304,17 @@ function BookingConfirm() {
                   Tạm tính
                 </Title>
                 <Title level={4} className="!font-bold !my-0 !text-lg">
-                  {myTicket.ticketPrice * ticket?.chairs?.length} đ
+                  {ticket?.price} đ
                 </Title>
               </div>
               <div className="flex flex-row justify-between items-start mt-3">
                 <Text className="!text-base">Giá vé</Text>
                 <div className="flex flex-col items-end">
                   <Text className="!font-semibold !text-base">
-                    {myTicket.ticketPrice} x {ticket?.chairs?.length}
+                    {busCurrent?.priceReal} x {ticket?.seatIds?.length}
                   </Text>
                   <Text className="!text-sm" type="secondary">
-                    Mã ghế/giường: {ticket.chairs.join(", ")}
+                    Mã ghế/giường: {ticket?.seatIds?.join(" , ")}
                   </Text>
                 </div>
               </div>
@@ -278,7 +332,7 @@ function BookingConfirm() {
                   <div className="flex flex-row items-center gap-2">
                     <FaBus />
                     <Text className="!text-sm !font-bold" type="secondary">
-                      {ticket.time.dateStart}
+                      {tripCurrent?.creationDate}
                     </Text>
                   </div>
                   <Text className="!text-sm !font-bold text-[#2474e5] underline">
@@ -296,7 +350,8 @@ function BookingConfirm() {
                         Tuyến
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {myTicket.from} - {myTicket.to}
+                        {tripCurrent?.departureLocation} -{" "}
+                        {tripCurrent?.arrivalLocation}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -304,7 +359,7 @@ function BookingConfirm() {
                         Nhà xe
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {myTicket.garage.name}
+                        {busCurrent?.name}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -312,7 +367,11 @@ function BookingConfirm() {
                         Chuyến
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {ticket.time.hourStart} • {ticket.time.dateStart}
+                        {addHoursToDateTime(tripCurrent?.departureTime)} •{" "}
+                        {addHoursToDateTime(
+                          tripCurrent?.departureTime,
+                          tripCurrent?.travelTime
+                        )}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -320,7 +379,7 @@ function BookingConfirm() {
                         Loại xe
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {myTicket.vehicleType}
+                        {busCurrent?.type}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -328,7 +387,7 @@ function BookingConfirm() {
                         Số lượng
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {ticket.chairs.length} vé
+                        {ticket?.seatIds?.length} vé
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -336,7 +395,7 @@ function BookingConfirm() {
                         Mã ghế/ giường
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {ticket.chairs.join(", ")}
+                        {ticket?.seatIds?.join(" , ")}
                       </Text>
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -344,7 +403,7 @@ function BookingConfirm() {
                         Tạm tính
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {myTicket.ticketPrice * ticket?.chairs?.length} đ
+                        {ticket?.price} đ
                       </Text>
                     </div>
                     <div>
@@ -367,14 +426,23 @@ function BookingConfirm() {
                       </div>
                       <div className="flex flex-col gap-1">
                         <Text className=" !text-sm">
-                          {ticket.placeStart.name}
+                          {
+                            tripCurrent?.pickupLocations[
+                              ticket?.pickupLocationId - 1
+                            ]?.name
+                          }
                         </Text>
                         <Text className="!text-xs" type="secondary">
-                          {ticket.placeStart.location}
+                          {
+                            tripCurrent?.pickupLocations[
+                              ticket?.pickupLocationId - 1
+                            ]?.address
+                          }
                         </Text>
                         <Text className="!font-semibold !text-sm">
-                          Dự kiến đón lúc: {ticket.time.hourStart} •
-                          {ticket.time.dateStart}
+                          Dự kiến đón lúc:{" "}
+                          {addHoursToDateTime(tripCurrent?.departureTime)} •
+                          {tripCurrent?.creationDate}
                         </Text>
                       </div>
                     </div>
@@ -397,15 +465,27 @@ function BookingConfirm() {
                         </div>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <Text className=" !text-sm">
-                          {ticket.placeEnd.name}
+                        <Text className="!text-sm">
+                          {
+                            tripCurrent?.dropoffLocations[
+                              ticket?.pickupLocationId - 1
+                            ]?.name
+                          }
                         </Text>
                         <Text className="!text-xs" type="secondary">
-                          {ticket.placeEnd.location}
+                          {
+                            tripCurrent?.dropoffLocations[
+                              ticket?.dropoffLocationId - 1
+                            ]?.address
+                          }
                         </Text>
                         <Text className="!font-semibold !text-sm">
-                          Dự kiến trả lúc: {ticket.time.hourEnd} •
-                          {ticket.time.dateEnd}
+                          Dự kiến trả lúc:{" "}
+                          {addHoursToDateTime(
+                            tripCurrent?.departureTime,
+                            tripCurrent?.travelTime
+                          )}{" "}
+                          •{tripCurrent?.creationDate}
                         </Text>
                       </div>
                     </div>
@@ -418,16 +498,24 @@ function BookingConfirm() {
                     {
                       label: (
                         <Text className="!font-bold !text-xl">
-                          {ticket.time.hourStart}
+                          {addHoursToDateTime(tripCurrent?.departureTime)}
                         </Text>
                       ),
                       children: (
                         <div className="flex flex-col">
                           <Text className="!font-semibold !text-sm">
-                            {ticket.placeStart.name}
+                            {
+                              tripCurrent?.pickupLocations[
+                                ticket?.pickupLocationId - 1
+                              ]?.name
+                            }
                           </Text>
                           <Text className="!text-xs" type="secondary">
-                            {ticket.placeStart.location}
+                            {
+                              tripCurrent?.pickupLocations[
+                                ticket?.pickupLocationId - 1
+                              ]?.address
+                            }
                           </Text>
                         </div>
                       ),
@@ -435,7 +523,10 @@ function BookingConfirm() {
                     {
                       label: (
                         <Text className="!font-bold !text-xl">
-                          {ticket.time.hourEnd}
+                          {addHoursToDateTime(
+                            tripCurrent?.departureTime,
+                            tripCurrent?.travelTime
+                          )}
                         </Text>
                       ),
                       dot: <AiOutlineEnvironment className="text-[#eb5757]" />,
@@ -443,10 +534,18 @@ function BookingConfirm() {
                       children: (
                         <div className="flex flex-col">
                           <Text className="!font-semibold !text-sm">
-                            {ticket.placeEnd.name}
+                            {
+                              tripCurrent?.dropoffLocations[
+                                ticket?.dropoffLocationId - 1
+                              ]?.name
+                            }
                           </Text>
                           <Text className="!text-xs" type="secondary">
-                            {ticket.placeStart.location}
+                            {
+                              tripCurrent?.dropoffLocations[
+                                ticket?.dropoffLocationId - 1
+                              ]?.address
+                            }
                           </Text>
                         </div>
                       ),
@@ -461,11 +560,12 @@ function BookingConfirm() {
                   onCancel={() => setModal2Open(false)}
                 >
                   <SelectLocation
-                    time={myTicket.time}
-                    placeStart={myTicket.placeStart}
-                    placeEnd={myTicket.placeEnd}
-                    valueStartItem={ticket.placeStart.index}
-                    valueEndItem={ticket.placeEnd.index}
+                    time={tripCurrent?.departureTime}
+                    travelTime={tripCurrent?.travelTime}
+                    placeStart={tripCurrent?.pickupLocations}
+                    placeEnd={tripCurrent?.dropoffLocations}
+                    valueStartItem={ticket?.pickupLocationId - 1}
+                    valueEndItem={ticket?.dropoffLocationId - 1}
                   />
                 </Modal>
               </div>

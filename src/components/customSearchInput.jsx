@@ -8,6 +8,8 @@ import fromImg from "../assets/images/from.png";
 import dateImg from "../assets/images/date.png";
 import { SwapOutlined } from "@ant-design/icons";
 import { provinces } from "../services/api";
+import { filterTrips } from "../services/trip";
+import { useUser } from "../context/UserContext";
 
 const { Text } = Typography;
 
@@ -18,6 +20,8 @@ function CustomSearchInput({ fromValue = "", toValue = "", dateValue = null }) {
   const [fromSlug, setFromSlug] = useState("");
   const [toSlug, setToSlug] = useState("");
   const [date, setDate] = useState(null);
+  const { setTripsContext } = useUser();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,7 +78,7 @@ function CustomSearchInput({ fromValue = "", toValue = "", dateValue = null }) {
     setTo(tmp);
   };
 
-  const handleSearchClick = () => {
+  const handleSearchClick = async () => {
     if (!fromSlug) {
       message.warning("Bạn chưa chọn nơi xuất phát");
       return;
@@ -88,11 +92,18 @@ function CustomSearchInput({ fromValue = "", toValue = "", dateValue = null }) {
       return;
     }
 
-    // Redirect if all values are valid
-    const queryString = `?from=${encodeURIComponent(
-      fromSlug
-    )}&to=${encodeURIComponent(toSlug)}&date=${encodeURIComponent(date)}`;
-    navigate(`/booking${queryString}`);
+    try {
+      //xữ lý hạn chến click nhiều lần khi slug không thay đổi
+      const trips = await filterTrips(fromSlug, toSlug, date);
+      setTripsContext(trips);
+
+      const queryString = `?from=${encodeURIComponent(
+        fromSlug
+      )}&to=${encodeURIComponent(toSlug)}&date=${encodeURIComponent(date)}`;
+      navigate(`/booking${queryString}`);
+    } catch (error) {
+      message.error("Có lỗi xảy ra khi tìm kiếm chuyến đi");
+    }
   };
 
   return (

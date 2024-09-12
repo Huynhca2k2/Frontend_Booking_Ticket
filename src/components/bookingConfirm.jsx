@@ -23,6 +23,7 @@ import SelectLocation from "./SelectLocation";
 import { addHoursToDateTime, bookings } from "../services/api";
 import { useUser } from "../context/UserContext";
 import LoginRegister from "./LoginRegister";
+import { createTicket } from "../services/ticket";
 
 const { Option } = Select;
 
@@ -56,10 +57,17 @@ function BookingConfirm() {
   const [open, setOpen] = useState(false);
   const { ticket, setTicket } = useTicket();
   const { tripCurrent, setTripCurrent, tripsContext, user } = useUser();
+  console.log("day la ", tripCurrent);
 
   const navigate = useNavigate();
 
   const [form] = Form.useForm();
+
+  // useEffect(() => {
+  //   if (tripCurrent === null) {
+  //     navigate("/");
+  //   }
+  // }, [tripCurrent, navigate]);
 
   useEffect(() => {
     if (user) {
@@ -124,28 +132,28 @@ function BookingConfirm() {
     </Form.Item>
   );
 
-  const handleSubmit = () => {
-    const formValues = form.getFieldsValue();
+  const handleSubmit = async () => {
+    if (user) {
+      setTicket((prevTicket) => ({
+        ...prevTicket,
+        userId: user.id,
+      }));
 
-    if (!formValues.email) {
-      message.warning("Bạn chưa nhập Email");
-      return;
-    }
-    if (!formValues.username) {
-      message.warning("Bạn chưa nhập Họ và tên");
-      return;
-    }
-    if (!formValues.phone) {
-      message.warning("Bạn chưa nhập số điện thoại");
-      return;
-    }
+      try {
+        const ticketCreationRequest = {
+          ...ticket,
+          userId: user.id,
+        };
 
-    setTicket((prevTicket) => ({
-      ...prevTicket,
-      userId: user?.id,
-    }));
-
-    message.success("Mua vé thành công!!!");
+        await createTicket(ticketCreationRequest);
+        message.success("Mua vé thành công!!!");
+      } catch (error) {
+        console.error("Lỗi khi tạo vé:", error);
+        message.error("Đã xảy ra lỗi. Vui lòng thử lại.");
+      }
+    } else {
+      message.warning("Vui lòng đăng nhập để tiện theo dõi vé!");
+    }
   };
   console.log(ticket);
 
@@ -304,14 +312,17 @@ function BookingConfirm() {
                   Tạm tính
                 </Title>
                 <Title level={4} className="!font-bold !my-0 !text-lg">
-                  {ticket?.price} đ
+                  {new Intl.NumberFormat("en-US").format(ticket?.price)} đ
                 </Title>
               </div>
               <div className="flex flex-row justify-between items-start mt-3">
                 <Text className="!text-base">Giá vé</Text>
                 <div className="flex flex-col items-end">
                   <Text className="!font-semibold !text-base">
-                    {busCurrent?.priceReal} x {ticket?.seatIds?.length}
+                    {new Intl.NumberFormat("en-US").format(
+                      busCurrent?.priceReal * ticket?.seatIds?.length
+                    )}{" "}
+                    đ
                   </Text>
                   <Text className="!text-sm" type="secondary">
                     Mã ghế/giường: {ticket?.seatIds?.join(" , ")}
@@ -403,7 +414,7 @@ function BookingConfirm() {
                         Tạm tính
                       </Text>
                       <Text className="!font-semibold !text-sm">
-                        {ticket?.price} đ
+                        {new Intl.NumberFormat("en-US").format(ticket?.price)} đ
                       </Text>
                     </div>
                     <div>

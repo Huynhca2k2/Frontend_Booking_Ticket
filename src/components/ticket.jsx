@@ -60,7 +60,7 @@ function Ticket({ busesCustom }) {
       status: true,
       price: selectedChairs.length * busesCustom?.priceReal,
       tripId: tripItem?.id,
-      busId: Number(busesCustom?.id),
+      busSelectedId: Number(busesCustom?.id),
       seatIds: selectedChairs,
     }));
   };
@@ -118,7 +118,7 @@ function Ticket({ busesCustom }) {
   };
 
   const availableChairCount = busesCustom?.seats?.filter(
-    (chair) => chair.status !== "unavailable"
+    (chair) => chair.status !== "UNAVAILABLE"
   ).length;
 
   const tabItems = [
@@ -214,7 +214,8 @@ function Ticket({ busesCustom }) {
 
           <div className="flex flex-col justify-between items-end">
             <Title level={4} className="!font-bold !text-[#2474e5]">
-              Từ {busesCustom?.priceReal} đ
+              Từ {new Intl.NumberFormat("en-US").format(busesCustom?.priceReal)}{" "}
+              đ
             </Title>
             <div className="border-[1px] border-[#27ae60] px-2 py-1 rounded w-max relative flash-sale">
               <Text>Giảm 20 %</Text>
@@ -270,7 +271,10 @@ function Ticket({ busesCustom }) {
                       <div className="flex flex-row items-center gap-2">
                         <span className="!font-normal">Tổng cộng:</span>
                         <span className="!font-bold !text-[#2474e5]">
-                          {selectedChairs.length * busesCustom?.priceReal} đ
+                          {new Intl.NumberFormat("en-US").format(
+                            selectedChairs.length * busesCustom?.priceReal
+                          )}{" "}
+                          đ
                         </span>
 
                         <Button

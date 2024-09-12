@@ -10,7 +10,7 @@ export const TicketProvider = ({ children }) => {
     status: true,
     userId: "",
     tripId: 0,
-    busId: 0,
+    busSelectedId: 0,
     pickupLocationId: 0,
     dropoffLocationId: 0,
     seatIds: [],
